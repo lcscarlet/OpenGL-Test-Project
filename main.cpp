@@ -1,5 +1,14 @@
 #include "libs.h"
+#define GLEW_STATIC
 typedef char GLchar;
+
+void updateInput(GLFWwindow* window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, GLFW_TRUE);
+	}
+}
 
 
 void framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH) {
@@ -9,7 +18,7 @@ void framebuffer_resize_callback(GLFWwindow* window, int fbW, int fbH) {
 
 bool loadShaders(GLuint &program)
 {	
-	bool loadSuccsess = true;
+	bool loadSuccess = true;
 	char infoLog[512];
 	GLint success;
 
@@ -25,8 +34,11 @@ bool loadShaders(GLuint &program)
 		while (std::getline(in_file, temp))
 			src += temp + "\n";
 	}
-	else
-		std::cout << "Could not open Vertex file" << "\n";	
+		else
+		{
+		std::cout << "Could not open Vertex file" << "\n";
+		loadSuccess = false;
+		}
 	in_file.close();
 
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -39,23 +51,24 @@ bool loadShaders(GLuint &program)
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 		std::cout << "Could not compile Vertex shader" << "\n";
 		std::cout << infoLog << "\n";
+		loadSuccess = false;
 	}
 
 	temp = "";
 	src = "";
 
-
-	glDeleteShader(vertexShader);
-
+	//Fragment
 	in_file.open("fragment_core.glsl");
 	if (in_file.is_open())
 	{
 		while (std::getline(in_file, temp))
 			src += temp + "\n";
 	}
-	else
+	else {
 		std::cout << "Could not open fragment file" << "\n";
-	in_file.close();
+		loadSuccess = false;
+		}
+		in_file.close();
 
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	const GLchar* fragSrc = src.c_str();
@@ -67,6 +80,7 @@ bool loadShaders(GLuint &program)
 		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
 		std::cout << "Could not compile fragment shader" << "\n";
 		std::cout << infoLog << "\n";
+		loadSuccess = false;
 	}
 
 	temp = "";
@@ -83,10 +97,14 @@ bool loadShaders(GLuint &program)
 		glGetProgramInfoLog(program, 512, NULL, infoLog);
 		std::cout << "Could not link program" << "\n";
 		std::cout << infoLog << "\n";
+		loadSuccess = false;
 	}
 
 	glUseProgram(0);
 	glDeleteShader(fragmentShader);
+	glDeleteShader(vertexShader);
+
+	return loadSuccess;
 }
 
 int main()
@@ -127,10 +145,30 @@ int main()
 		glfwTerminate();
 	}
 
+	//OpenGL Options
+	glEnable(GL_DEPTH_TEST);
+
+	glEnable(GL_CULL_FACE);
+
+	glCullFace(GL_BACK);
+
+	glFrontFace(GL_CCW);
+
+	glEnable(GL_BLEND);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+
+	
+
 	//SHADER INIT
 
 	GLuint shader_program;
-	loadShaders(shader_program);
+	if(!loadShaders(shader_program))
+		glfwTerminate();
+
 	
 	//Main Loop
 	while (!glfwSetWindowShouldClose(window))
@@ -138,6 +176,7 @@ int main()
 		//update input
 		glfwPollEvents();
 		//update
+		updateInput(window);
 		//Clear
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -150,8 +189,10 @@ int main()
 
 
 
-	//Program Cleanup
+	//Program Cleanup -- DestroyWindow possibly redundant
+	glfwDestroyWindow(window);
 	glfwTerminate();
+	glDeleteProgram(shader_program);
 
 	return 0;
 

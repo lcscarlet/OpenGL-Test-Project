@@ -89,13 +89,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\lee\source\repos\OpenGL Test Project\deps\include\GLM;C:\Users\lee\source\repos\OpenGL Test Project\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\lee\source\repos\OpenGL Test Project\deps\include\GLM;C:\Users\lee\source\repos\OpenGL Test Project\deps\include\SOIL2;C:\Users\lee\source\repos\OpenGL Test Project\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\lee\source\repos\OpenGL Test Project\deps\include\SOIL2\lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew.h</AdditionalDependencies>
+      <AdditionalDependencies>glew.h;glew32.lib;glfw3.lib;glfw3.dll</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -106,7 +106,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\lee\source\repos\OpenGL Test Project\deps\include\GLM;C:\Users\lee\source\repos\OpenGL Test Project\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\lee\source\repos\OpenGL Test Project\deps\include\GLM;C:\Users\lee\source\repos\OpenGL Test Project\deps\include\SOIL2;C:\Users\lee\source\repos\OpenGL Test Project\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -114,7 +114,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\lee\source\repos\OpenGL Test Project\deps\include\SOIL2\lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew.h</AdditionalDependencies>
+      <AdditionalDependencies>glew.h;glew32.lib;glfw3.lib;glfw3.dll</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -123,13 +123,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\lee\source\repos\OpenGL Test Project\deps\include\GLM;C:\Users\lee\source\repos\OpenGL Test Project\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\lee\source\repos\OpenGL Test Project\deps\include\GLM;C:\Users\lee\source\repos\OpenGL Test Project\deps\include\SOIL2;C:\Users\lee\source\repos\OpenGL Test Project\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\lee\source\repos\OpenGL Test Project\deps\include\SOIL2\lib;C:\Users\lee\source\repos\OpenGL Test Project\deps\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew.h</AdditionalDependencies>
+      <AdditionalDependencies>glew.h;glew32.lib;glfw3.lib;glfw3.dll</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -140,7 +140,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\lee\source\repos\OpenGL Test Project\deps\include\GLM;C:\Users\lee\source\repos\OpenGL Test Project\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\lee\source\repos\OpenGL Test Project\deps\include\GLM;C:\Users\lee\source\repos\OpenGL Test Project\deps\include\SOIL2;C:\Users\lee\source\repos\OpenGL Test Project\deps\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,32 +148,19 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\Users\lee\source\repos\OpenGL Test Project\deps\include\SOIL2\lib;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew.h</AdditionalDependencies>
+      <AdditionalDependencies>glew.h;glew32.lib;glfw3.lib;glfw3.dll</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="deps\include\eglew.h" />
-    <ClInclude Include="deps\include\glew.h" />
-    <ClInclude Include="deps\include\glfw3.h" />
-    <ClInclude Include="deps\include\glfw3native.h" />
-    <ClInclude Include="deps\include\glxew.h" />
-    <ClInclude Include="deps\include\wglew.h" />
     <ClInclude Include="libs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="deps\lib\glfw3.dll" />
     <None Include="fragment_core.glsl" />
     <None Include="glew32.dll" />
     <None Include="vertex_core.glsl" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="deps\lib\glew32.lib" />
-    <Library Include="deps\lib\glfw3.lib" />
-    <Library Include="deps\lib\glfw3dll.lib" />
-    <Library Include="deps\lib\glfw3_mt.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

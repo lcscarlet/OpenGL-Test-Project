@@ -8,7 +8,6 @@
 
 #include <glfw3.h>
 #include <eglew.h>
-#include <gl/GL.h>
 #include <glew.h>
 #include <glm.hpp>
 #include <vec2.hpp>
