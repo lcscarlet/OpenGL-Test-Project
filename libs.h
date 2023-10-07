@@ -16,12 +16,12 @@
 #include <mat4x4.hpp>
 #include <gtc\matrix_transform.hpp>
 #include <gtc\type_ptr.hpp>
-#include<SOIL2.h>
+#include <SOIL2.h>
 
 
 
-/*struct Vertex {
+struct Vertex {
 	glm::vec3 position;
 	glm::vec3 color;
 	glm::vec2 texcoord;
-*/
+};
