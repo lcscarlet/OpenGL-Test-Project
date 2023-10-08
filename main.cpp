@@ -1,23 +1,14 @@
 #include "libs.h"
-#define GLEW_STATIC
+
 
 Vertex vertices[] =
 {
 
 	// Color
-	glm::vec3(0.0f, 0.5f, 0.f),
-	glm::vec3(1.f, 0.f, 0.f),
-	glm::vec3(0.f, 1.f, 0.f),
+	glm::vec3(0.0f, 0.5f, 0.f), glm::vec3(-0.5f, -0.5f, 0.f), glm::vec2(0.f, 1.f),
+	glm::vec3(1.f, 0.f, 0.f),	glm::vec3(0.f, 0.f, 1.f),     glm::vec2(0.f, 0.f),
+	glm::vec3(0.f, 1.f, 0.f),	glm::vec3(0.5f, -0.5f, 0.f),  glm::vec2(1.f, 0.f)
 
-	// Position
-	glm::vec3(-0.5f, -0.5f, 0.f),
-	glm::vec3(0.f, 0.f, 1.f),
-	glm::vec3(0.5f, -0.5f, 0.f),
-
-	// Texcoords
-	glm::vec2(0.f, 1.f),
-	glm::vec2(0.f, 0.f),
-	glm::vec2(1.f, 0.f)
 
 };
 unsigned nrOfVertices = sizeof(vertices / sizeof(Vertex));

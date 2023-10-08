@@ -4,11 +4,11 @@
 #include <fstream>
 #include <string>
 #include <vector>
-
+#include <glew.h>
 
 #include <glfw3.h>
 #include <eglew.h>
-#include <glew.h>
+
 #include <glm.hpp>
 #include <vec2.hpp>
 #include <vec3.hpp>
