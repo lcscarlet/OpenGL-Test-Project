@@ -226,7 +226,7 @@ int main()
 	int image_width = 0;
 	int image_height = 0;
 
-	unsigned char* image = Soil_load_image("images/todo.png", &image_width, &image_height, NULL, SOIL_LOAD_RGBA);
+	unsigned char* image = SOIL_load_image("images/todo.png", &image_width, &image_height, NULL, SOIL_LOAD_RGBA);
 
 	GLuint texture0;
 
@@ -270,7 +270,7 @@ int main()
 
 		//Updating uniforms
 
-		glUniform1i(glGetUniformLocation(shader_program, "texture0") 0);
+		glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
 
 		//Activate texture
 		glActiveTexture(GL_TEXTURE0);

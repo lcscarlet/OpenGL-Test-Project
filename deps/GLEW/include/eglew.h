@@ -103,10 +103,10 @@
 /* EGL Types */
 #include <sys/types.h>
 
-#include <KHR/khrplatform.h>
-#include <EGL/eglplatform.h>
+#include <glew.h>
 
-#include <GL/glew.h>
+#include "khrplatform.h"
+#include "eglplatform.h"
 
 #ifdef __cplusplus
 extern "C" {
