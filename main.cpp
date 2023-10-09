@@ -11,7 +11,7 @@ Vertex vertices[] =
 
 
 };
-unsigned nrOfVertices = sizeof(vertices / sizeof(Vertex));
+unsigned nrOfVertices = sizeof(vertices) / sizeof(Vertex);
 
 GLuint indices[] = {
 	0, 1, 2 };
@@ -218,8 +218,41 @@ int main()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texcoord));
 	glEnableVertexAttribArray(2);
 
-	// Unbind VAO
+	// Unbind VAO (i.e bind VAO 0)
 	glBindVertexArray(0);
+
+
+	//Texture Init
+	int image_width = 0;
+	int image_height = 0;
+
+	unsigned char* image = Soil_load_image("images/todo.png", &image_width, &image_height, NULL, SOIL_LOAD_RGBA);
+
+	GLuint texture0;
+
+	glGenTextures(1, &texture0);
+	glBindTexture(GL_TEXTURE_2D, texture0);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	if (image) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else {
+		std::cout << "Error: Texture loading failed" << "\n";
+	}
+
+	//unbinding texture - texture will never have a texture ID of zero
+	glActiveTexture(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	SOIL_free_image_data(image);
 
 	// Main Loop
 	while (!glfwWindowShouldClose(window))
@@ -234,6 +267,15 @@ int main()
 
 		// What shader to use?
 		glUseProgram(shader_program);
+
+		//Updating uniforms
+
+		glUniform1i(glGetUniformLocation(shader_program, "texture0") 0);
+
+		//Activate texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture0);
+
 
 		// Bind vertex array object
 
