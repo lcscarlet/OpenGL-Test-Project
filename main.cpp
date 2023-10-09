@@ -3,19 +3,20 @@
 
 Vertex vertices[] =
 {
-
-	// 
-	glm::vec3(0.0f, 0.5f, 0.f), glm::vec3(-0.5f, -0.5f, 0.f), glm::vec2(0.f, 1.f),
-	glm::vec3(1.f, 0.f, 0.f),	glm::vec3(0.f, 0.f, 1.f),     glm::vec2(0.f, 0.f),
-	glm::vec3(0.f, 1.f, 0.f),	glm::vec3(0.5f, -0.5f, 0.f),  glm::vec2(1.f, 0.f)
+	glm::vec3(-0.5f, 0.5f, 0.f),	glm::vec3(1.f, 0.f, 0.f),		glm::vec2(0.f, 1.f),
+	glm::vec3(-0.5f, -0.5f, 0.f),	glm::vec3(0.f, 1.f, 0.f),		glm::vec2(0.f, 0.f),
+	glm::vec3(0.5f, -0.5f, 0.f),	glm::vec3(0.f, 0.f, 1.f),		glm::vec2(1.f, 0.f),
+	glm::vec3(0.5f, -0.5f, 0.f),	glm::vec3(1.f, 1.f, 0.f),		glm::vec2(0.f, 0.f)
+	
 
 
 };
 unsigned nrOfVertices = sizeof(vertices) / sizeof(Vertex);
 
 GLuint indices[] = {
-	0, 1, 2,
-	3, 4, 5};
+	0, 1, 2, //Triangle 1
+	0, 2, 3 //Triangle 2
+	};
 unsigned nrOfIndices = sizeof(indices) / sizeof(GLuint);
 
 // Beginning of updating input, getting events - TODO
@@ -255,6 +256,23 @@ int main()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	SOIL_free_image_data(image);
 
+	glm::mat4 ModelMatrix(1.f); 
+	ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.f, 2.f, 0.f));
+
+	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(1.f, 0.f, 0.f));
+
+	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 1.f, 0.f));
+
+	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
+
+	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(1.f));
+
+	glUseProgram(shader_program);
+	
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+
+	glUseProgram(0);
+
 	// Main Loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -273,6 +291,19 @@ int main()
 
 		glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
 
+
+		//Move, rotate, and scaling a matrix
+		ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.f, 2.f, 0.f));
+
+		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(5.f), glm::vec3(1.f, 0.f, 0.f));
+
+		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 1.f, 0.f));
+
+		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
+
+		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(1.f));
+		glUniformMatrix4fv(glGetUniformLocation(shader_program, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+
 		//Activate texture
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture0);
@@ -283,7 +314,9 @@ int main()
 		glBindVertexArray(VAO);
 
 		// Draw
+		//glDrawArrays(GL_TRIANGLES, 0, nrOfVertices);
 		glDrawElements(GL_TRIANGLES, nrOfIndices, GL_UNSIGNED_INT, 0);
+		
 
 		// End Draw
 
