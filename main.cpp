@@ -4,7 +4,7 @@
 Vertex vertices[] =
 {
 
-	// Color
+	// 
 	glm::vec3(0.0f, 0.5f, 0.f), glm::vec3(-0.5f, -0.5f, 0.f), glm::vec2(0.f, 1.f),
 	glm::vec3(1.f, 0.f, 0.f),	glm::vec3(0.f, 0.f, 1.f),     glm::vec2(0.f, 0.f),
 	glm::vec3(0.f, 1.f, 0.f),	glm::vec3(0.5f, -0.5f, 0.f),  glm::vec2(1.f, 0.f)
@@ -14,7 +14,8 @@ Vertex vertices[] =
 unsigned nrOfVertices = sizeof(vertices) / sizeof(Vertex);
 
 GLuint indices[] = {
-	0, 1, 2 };
+	0, 1, 2,
+	3, 4, 5};
 unsigned nrOfIndices = sizeof(indices) / sizeof(GLuint);
 
 // Beginning of updating input, getting events - TODO
@@ -226,7 +227,7 @@ int main()
 	int image_width = 0;
 	int image_height = 0;
 
-	unsigned char* image = SOIL_load_image("images/todo.png", &image_width, &image_height, NULL, SOIL_LOAD_RGBA);
+	unsigned char* image = SOIL_load_image("images/todo.jpg", &image_width, &image_height, NULL, SOIL_LOAD_RGBA);
 
 	GLuint texture0;
 
