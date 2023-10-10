@@ -6,6 +6,7 @@ Vertex vertices[] =
 	glm::vec3(-0.5f, 0.5f, 0.f),	glm::vec3(1.f, 0.f, 0.f),		glm::vec2(0.f, 1.f),
 	glm::vec3(-0.5f, -0.5f, 0.f),	glm::vec3(0.f, 1.f, 0.f),		glm::vec2(0.f, 0.f),
 	glm::vec3(0.5f, -0.5f, 0.f),	glm::vec3(0.f, 0.f, 1.f),		glm::vec2(1.f, 0.f),
+	
 	glm::vec3(0.5f, -0.5f, 0.f),	glm::vec3(1.f, 1.f, 0.f),		glm::vec2(0.f, 0.f)
 	
 
@@ -131,6 +132,50 @@ bool loadShaders(GLuint& program)
 	return loadSuccess;
 }
 
+void updateInput(GLFWwindow* window, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale) {
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		position.z -= 0.01f;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		position.z += 0.01f;
+	}	
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		position.x -= 0.01f;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{
+		position.x += 0.01f;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+	{
+		position.y -= 1.01f;
+	}
+	
+	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+	{
+		position.x += 1.01f;
+	}
+
+
+	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS)
+	{
+		scale += 0.01f;
+	}
+
+
+	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS)
+	{
+		scale -= 0.01f;
+		//if(scale < glm::vec3(0.0f)) pic will flip when scale enters negative numbers
+	}
+}
+
 int main()
 {
 	// Initialzing GFLW
@@ -147,12 +192,12 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
-	// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); MAC?
+	// glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); possibly useless forward compatibility
 
 	GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGL test", NULL, NULL);
 	glfwSetFramebufferSizeCallback(window, framebuffer_resize_callback);
 
-	// glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
+	glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
 	// glViewport(0, 0, framebufferWidth, framebufferHeight);
 
 	glfwMakeContextCurrent(window);
@@ -256,20 +301,43 @@ int main()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	SOIL_free_image_data(image);
 
+	//Initializing matrix
+	glm::vec3 position(0.f);
+	glm::vec3 rotation(0.f);
+	glm::vec3 scale(1.f);
+
 	glm::mat4 ModelMatrix(1.f); 
-	ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.f, 2.f, 0.f));
+	ModelMatrix = glm::translate(ModelMatrix, position);
 
-	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(1.f, 0.f, 0.f));
+	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(rotation.x), glm::vec3(1.f, 0.f, 0.f));
 
-	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 1.f, 0.f));
+	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(rotation.y), glm::vec3(0.f, 1.f, 0.f));
 
-	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
+	ModelMatrix = glm::rotate(ModelMatrix, glm::radians(rotation.z), glm::vec3(0.f, 0.f, 1.f));
 
-	ModelMatrix = glm::scale(ModelMatrix, glm::vec3(1.f));
+	ModelMatrix = glm::scale(ModelMatrix, scale);
+
+	glm::vec3 camPosition(0.f, 0.f, 1.f);
+	glm::vec3 worldUp(0.f, 1.f, 0.f);
+	glm::vec3 camFront(0.f, 0.f, -1.f);
+	glm::mat4 ViewMatrix(1.f);
+	ViewMatrix = glm::lookAt(camPosition, camPosition + camFront, worldUp);
+
+	float fov = 90.f;
+	float nearPlane = 0.1f;
+	float farPlane = 1000.f;
+	glm::mat4 ProjectionMatrix(1.f);
+
+	ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
+
+	//Initalizing uniforms
 
 	glUseProgram(shader_program);
 	
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "ViewMatrix"), 1, GL_FALSE, glm::value_ptr(ViewMatrix));
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "ProjectionMatrix"), 1, GL_FALSE, glm::value_ptr(ProjectionMatrix));
 
 	glUseProgram(0);
 
@@ -278,6 +346,7 @@ int main()
 	{
 		// update input
 		glfwPollEvents();
+		updateInput(window, position, rotation, scale);
 		// update
 		updateInput(window);
 		// Clear
@@ -292,17 +361,25 @@ int main()
 		glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
 
 
-		//Move, rotate, and scaling a matrix
-		ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.f, 2.f, 0.f));
+		//Move, rotate, and scaling a matrix - but updates with each loop
+	/*	position.z += -0.01f;
+		rotation.y += -0.f;
+		scale.x += 0.01f;*/
+		ModelMatrix = glm::mat4(1.f);
+		ModelMatrix = glm::translate(ModelMatrix, position);
+		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(rotation.x), glm::vec3(1.f, 0.f, 0.f));
+		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(rotation.y), glm::vec3(0.f, 1.f, 0.f));
+		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(rotation.z), glm::vec3(0.f, 0.f, 1.f));
+		ModelMatrix = glm::scale(ModelMatrix, scale);
 
-		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(5.f), glm::vec3(1.f, 0.f, 0.f));
-
-		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 1.f, 0.f));
-
-		ModelMatrix = glm::rotate(ModelMatrix, glm::radians(0.f), glm::vec3(0.f, 0.f, 1.f));
-
-		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(1.f));
 		glUniformMatrix4fv(glGetUniformLocation(shader_program, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(ModelMatrix));
+
+
+		ProjectionMatrix = glm::mat4(1.f);
+		glfwGetFramebufferSize(window, &framebufferWidth, &framebufferHeight);
+
+
+		ProjectionMatrix = glm::perspective(glm::radians(fov), static_cast<float>(framebufferWidth) / framebufferHeight, nearPlane, farPlane);
 
 		//Activate texture
 		glActiveTexture(GL_TEXTURE0);
